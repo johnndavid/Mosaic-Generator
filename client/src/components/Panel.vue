@@ -1,0 +1,77 @@
+<template>
+<div class="user-view">
+  <div class="main-view container">
+    <b-img class="icon row col-6" center rounded="circle" :src="require('../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
+    <a class="col-6" center :href="link"> {{learnMore}} </a>
+  </div>
+</div>
+</template>
+
+<script>
+let userID = "";
+let channelID = "";
+let token = "";
+const twitch = window.Twitch.ext;
+
+
+export default {
+  name: 'Panel',
+  data() {
+    return {
+      learnMore: 'Learn More',
+      link: 'https://gamechangercharity.org/'
+    }
+  },
+  methods: {
+    printInfo() {
+      twitch.rig.log(`userID: ${userID}`);
+      twitch.rig.log(`channelID: ${channelID}`);
+      // twitch.rig.log(`token: ${token}`);
+    }
+
+  },
+  async beforeMount() {
+    console.log("Here I am")
+    await window.Twitch.ext.onAuthorized((auth) => {
+      userID = auth.userId;
+      channelID = auth.channelId;
+      token = auth.token;
+      // put what you want to do with this information in here
+      this.printInfo();
+    })
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.user-view {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.main-view {
+  display: grid;
+  grid-template: "icon"auto "link"2em/ auto;
+  align-items: center;
+  justify-items: center;
+}
+
+.icon {
+  grid-area: icon;
+  padding: 5vh 0;
+}
+
+a {
+  grid-area: link;
+  background-color: #efefef;
+  color: #454343;
+  font-size: 1.1em;
+  border-radius: 1em;
+}
+
+a:hover {
+  font-size: 1.2em;
+}
+</style>

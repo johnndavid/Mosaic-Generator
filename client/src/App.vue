@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view/>
   </div>
 </template>
@@ -18,6 +17,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+.user-view  {
+  background: rgb(79,76,76);
+  background: -moz-linear-gradient(180deg, rgba(79,76,76,1) 0%, rgba(129,124,124,1) 50%, rgba(79,76,76,1) 100%);
+  background: -webkit-linear-gradient(180deg, rgba(79,76,76,1) 0%, rgba(129,124,124,1) 50%, rgba(79,76,76,1) 100%);
+  background: linear-gradient(180deg, rgba(79,76,76,1) 0%, rgba(129,124,124,1) 50%, rgba(79,76,76,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4f4c4c",endColorstr="#4f4c4c",GradientType=1);
+  background-color: #454343;
+  height:  100vh;
 }
 </style>
