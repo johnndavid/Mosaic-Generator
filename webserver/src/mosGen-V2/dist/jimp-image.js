@@ -1,10 +1,14 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var rgb_1 = __importDefault(require("./rgb"));
-var jimp_1 = __importDefault(require("jimp"));
+var rgb_1 = require("./rgb");
+var Jimp = __importStar(require("jimp"));
 var mosaic_default_config_json_1 = require("./mosaic-default-config.json");
 var JimpImage = /** @class */ (function () {
     function JimpImage(image) {
@@ -18,7 +22,7 @@ var JimpImage = /** @class */ (function () {
      */
     JimpImage.read = function (path) {
         return new Promise(function (resolve, reject) {
-            jimp_1.default.read(path, function (err, image) {
+            Jimp.read(path, function (err, image) {
                 if (err instanceof Error) {
                     //If this is the error, do not handle it as the api
                     //already tries to read the file twice
@@ -118,7 +122,7 @@ var JimpImage = /** @class */ (function () {
                     var red = Math.round(r / i);
                     var green = Math.round(g / i);
                     var blue = Math.round(b / i);
-                    resolve(new rgb_1.default(red, green, blue));
+                    resolve(new rgb_1.RGB(red, green, blue));
                 }
             });
         });
@@ -143,4 +147,4 @@ var JimpImage = /** @class */ (function () {
     };
     return JimpImage;
 }());
-exports.default = JimpImage;
+exports.JimpImage = JimpImage;
