@@ -1,3 +1,4 @@
+"use strict";
 // import { Donation } from "../../data/Donation";
 // import { Donations } from "../../data/Donations";
 // import { JimpImage } from "../../mosGen-V2/src/jimp-image";
