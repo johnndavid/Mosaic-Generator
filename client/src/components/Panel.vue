@@ -25,6 +25,18 @@ export default {
       state: 'Main'
     }
   },
+  sockets: {
+    connect: () => {
+      twitch.rig.log(`Audience: ${userId} has connected to socket`);
+    },
+    welcome: (message) => {
+      twitch.rig.log('--------------------------------')
+      // twitch.rig.log(`Audience: ${userId}`);
+      twitch.rig.log(message);
+      twitch.rig.log('--------------------------------')
+    }
+
+  },
   methods: {
     printInfo() {
       twitch.rig.log(`Audience: ${userID} is watching Streamer ${channelID}`);

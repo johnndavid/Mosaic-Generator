@@ -9,10 +9,10 @@
     <b-form-input v-model="donationGoal" type="number"></b-form-input>
   </div>
   <div class="buttons">
-    <b-button class="primary-btn" v-if="btnState === 'Start'" @click="start()">Start</b-button>
-    <b-button class="stop" v-if="btnState === 'Stop'" @click="stop()">Stop</b-button>
-    <b-button class="primary-btn" v-if="btnState === 'Reveal'" @click="reveal()">Reveal</b-button>
-    <b-button class="primary-btn" v-if="btnState === 'Reset'" @click="reset()">Reset</b-button>
+    <b-button class="primary-btn" v-show="(btnState === 'Start')" @click="start()">Start</b-button>
+    <b-button class="stop" v-show="(btnState === 'Stop')" @click="stop()">Stop</b-button>
+    <b-button class="primary-btn" v-show="(btnState === 'Reveal')" @click="reveal()">Reveal</b-button>
+    <b-button class="primary-btn" v-show="(btnState === 'Reset')" @click="reset()">Reset</b-button>
   </div>
 </div>
 </template>
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     printInfo() {
-      twitch.rig.log(`Streamer: ${channelID} is now streaming`);
+      twitch.rig.log(`Streamer: ${channelID} is now streaming with a userID of ${userID}`);
     },
     logFile() {
       console.log(this.file);

@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "tsc -p . && ts-node src/server.ts",
     "build": "tsc -p .",
-    "run": "node dist/server.js"
+    "run": "node dist/server.js",
+    "dev": "node_modules/nodemon/bin/nodemon.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.4",
@@ -18,14 +19,15 @@
     "mosaic-node-generator": "^1.1.5",
     "node-fetch": "^2.6.0",
     "pug": "^2.0.4",
-    "socket.io": "^2.3.0",
-    "vue-socket.io": "^3.0.7"
+    "socket.io": "^2.3.0"
   },
   "main": "server.js",
   "devDependencies": {
     "@types/express": "^4.17.2",
     "@types/node": "^12.12.14",
     "@types/socket.io": "^2.1.4",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.2",
     "typescript": "^3.8.2"
   },
   "author": "",
