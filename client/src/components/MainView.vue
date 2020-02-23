@@ -1,12 +1,13 @@
 <template>
 <div class="user-view">
-  <MainView v-show="state === 'Main'" />
+  <div class="main-view container">
+    <b-img class="icon row col-6" center rounded="circle" :src="require('../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
+    <b-button class="col-6" center :href="link"> {{learnMore}} </b-button>
+  </div>
 </div>
 </template>
 
 <script>
-import MainView from "./MainView";
-
 let userID = "";
 let channelID = "";
 let token = "";
@@ -14,15 +15,12 @@ const twitch = window.Twitch.ext;
 
 
 export default {
-  name: 'Panel',
-  components: {
-    MainView
-  },
+  name: 'MainView',
   data() {
     return {
       learnMore: 'Learn More',
       link: 'https://gamechangercharity.org/',
-      state: 'Main'
+      state: ''
     }
   },
   methods: {
