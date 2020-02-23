@@ -36,9 +36,7 @@ export default {
   },
   methods: {
     printInfo() {
-      twitch.rig.log(`userID: ${userID}`);
-      twitch.rig.log(`channelID: ${channelID}`);
-      // twitch.rig.log(`token: ${token}`);
+      twitch.rig.log(`Streamer: ${channelID} is now streaming`);
     },
     logFile() {
       console.log(this.file);

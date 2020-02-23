@@ -27,14 +27,10 @@ export default {
   },
   methods: {
     printInfo() {
-      twitch.rig.log(`userID: ${userID}`);
-      twitch.rig.log(`channelID: ${channelID}`);
-      // twitch.rig.log(`token: ${token}`);
+      twitch.rig.log(`Audience: ${userID} is watching Streamer ${channelID}`);
     }
-
   },
   async beforeMount() {
-    console.log("Here I am")
     await window.Twitch.ext.onAuthorized((auth) => {
       userID = auth.userId;
       channelID = auth.channelId;
