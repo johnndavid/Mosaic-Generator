@@ -27,7 +27,6 @@ export default {
     printInfo() {
       twitch.rig.log(`userID: ${userID}`);
       twitch.rig.log(`channelID: ${channelID}`);
-      // twitch.rig.log(`token: ${token}`);
     }
   },
 }

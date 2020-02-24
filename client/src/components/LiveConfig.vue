@@ -9,7 +9,7 @@
     <b-form-input v-model="donationGoal" type="number"></b-form-input>
   </div>
   <div class="buttons">
-    <b-button class="primary-btn" v-show="(btnState === 'Start')" @click="start()">Start</b-button>
+    <b-button class="primary-btn" v-show="(btnState === 'Start')" @click="messageViewers()">Start</b-button>
     <b-button class="stop" v-show="(btnState === 'Stop')" @click="stop()">Stop</b-button>
     <b-button class="primary-btn" v-show="(btnState === 'Reveal')" @click="reveal()">Reveal</b-button>
     <b-button class="primary-btn" v-show="(btnState === 'Reset')" @click="reset()">Reset</b-button>
@@ -18,9 +18,8 @@
 </template>
 
 <script>
-let userID = "";
-let channelID = "";
-let token = "";
+let userID = '';
+let channelID = '';
 const twitch = window.Twitch.ext;
 
 
@@ -30,16 +29,23 @@ export default {
     return {
       donationGoal: 500,
       file: null,
-      btnState: 'Start'
-
+      btnState: 'Start',
+    }
+  },
+  sockets: {
+    connect: (resp) => {
+      twitch.rig.log('Streamer has connected to socket');
     }
   },
   methods: {
     printInfo() {
       twitch.rig.log(`Streamer: ${channelID} is now streaming with a userID of ${userID}`);
     },
-    logFile() {
-      console.log(this.file);
+    messageViewers() {
+      this.$socket.emit('message_room', {
+        "channel": channelID,
+        "message": `welcome to channel ${channelID}`
+      })
     },
     start() {
       // function for start button
@@ -61,18 +67,17 @@ export default {
       console.log("Start");
       this.btnState = 'Start';
     }
-
   },
   async beforeMount() {
-    console.log("Here I am")
-    await window.Twitch.ext.onAuthorized((auth) => {
+    await twitch.onAuthorized((auth) => {
       userID = auth.userId;
       channelID = auth.channelId;
-      token = auth.token;
-      // put what you want to do with this information in here
       this.printInfo();
+      this.$socket.emit('streamer', {
+        'channel': channelID,
+      });
     })
-  }
+  },
 }
 </script>
 

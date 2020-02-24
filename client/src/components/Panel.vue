@@ -27,15 +27,11 @@ export default {
   },
   sockets: {
     connect: () => {
-      twitch.rig.log(`Audience: ${userId} has connected to socket`);
+      twitch.rig.log(`Audience: has connected to socket`);
     },
-    welcome: (message) => {
-      twitch.rig.log('--------------------------------')
-      // twitch.rig.log(`Audience: ${userId}`);
+    room_message: (message) => {
       twitch.rig.log(message);
-      twitch.rig.log('--------------------------------')
     }
-
   },
   methods: {
     printInfo() {
@@ -49,6 +45,10 @@ export default {
       token = auth.token;
       // put what you want to do with this information in here
       this.printInfo();
+      this.$socket.emit('join room', {
+        "channel": channelID
+      })
+
     })
   }
 }
