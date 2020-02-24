@@ -23,22 +23,19 @@ http.listen(PORT, () => {
 });
 
 serverio.on('connection', (socket) => {
-  // console.log('New Connection aquired');
-  console.log(dateString());
-  console.log(`----> SocketID: ${socket.id}`);
 
   socket.on('join room', ({ channel }) => {
     socket.join(`${channel}`, () => {
-      console.log(`Audience ${socket.id} joined ${channel} channel`);
+      console.log(`JOIN_ROOM: User joined >>> ${channel}`);
     });
   })
 
   socket.on('streamer', ({ channel }) => {
     streams.add(channel, socket);
-    socket.join(`${channel}`, () => {
-      console.log(`Streamer has joined the ${channel} channel`);
-    })
     console.log(`ChannelID ${channel} was added to the streamList`);
+    socket.join(`${channel}`, () => {
+      console.log(`JOIN_ROOM: Sreamer joined >>> ${channel}`);
+    })
   })
 
   socket.on('disconnect', (socket) => {
@@ -47,9 +44,8 @@ serverio.on('connection', (socket) => {
 
   socket.on('message_room', ({ channel, message }) => {
     serverio.to(`${channel}`).emit('room_message', message);
+    console.log(streams);
   })
-
-
 });
 
 function dateString() {

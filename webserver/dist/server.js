@@ -23,22 +23,19 @@ http.listen(PORT, function () {
     console.log("Listening on " + PORT);
 });
 serverio.on('connection', function (socket) {
-    // console.log('New Connection aquired');
-    console.log(dateString());
-    console.log("----> SocketID: " + socket.id);
     socket.on('join room', function (_a) {
         var channel = _a.channel;
         socket.join("" + channel, function () {
-            console.log("Audience " + socket.id + " joined " + channel + " channel");
+            console.log("JOIN_ROOM: User joined >>> " + channel);
         });
     });
     socket.on('streamer', function (_a) {
         var channel = _a.channel;
         streams.add(channel, socket);
-        socket.join("" + channel, function () {
-            console.log("Streamer has joined the " + channel + " channel");
-        });
         console.log("ChannelID " + channel + " was added to the streamList");
+        socket.join("" + channel, function () {
+            console.log("JOIN_ROOM: Sreamer joined >>> " + channel);
+        });
     });
     socket.on('disconnect', function (socket) {
         console.log('disconnected');
@@ -46,6 +43,7 @@ serverio.on('connection', function (socket) {
     socket.on('message_room', function (_a) {
         var channel = _a.channel, message = _a.message;
         serverio.to("" + channel).emit('room_message', message);
+        console.log(streams);
     });
 });
 function dateString() {
