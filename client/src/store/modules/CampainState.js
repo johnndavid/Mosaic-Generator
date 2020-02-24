@@ -1,6 +1,6 @@
 const state = {
   mosaicState: 'Start',
-  donationTotal: 0,
+  donationTotal: 250,
   donationGoal: 500,
   donators: [],
   inputFile: '',
@@ -20,12 +20,6 @@ const actions = {
   setDonationGoal({ commit }, donationGoal) { commit('changeDonationGoal', donationGoal); },
   setDonators({ commit }, donators) { commit('changeDonators', donators); },
   setInputFile({ commit }, inputFile) { commit('changeInputFile', inputFile); },
-  setCampainState({ commit }, campainState) {
-    commit('setMosaicState', campainState.mosaicState);
-    commit('setDonationTotal', campainState.donationTotal);
-    commit('setDonationGoal', campainState.donationGoal);
-    commit('setDonationTotal', campainState.donationTotal);
-  },
 };
 
 const mutations = {

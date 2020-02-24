@@ -1,11 +1,17 @@
 <template>
 <div class="user-view">
-  <MainView v-show="state === 'Main'" />
+  <MainView />
+  <StartView />
 </div>
 </template>
 
 <script>
-import MainView from "./MainView";
+import {
+  mapGetters,
+  mapActions
+} from 'vuex';
+import MainView from "./PanelViews/MainView";
+import StartView from "./PanelViews/StartView";
 
 let userID = "";
 let channelID = "";
@@ -16,14 +22,11 @@ const twitch = window.Twitch.ext;
 export default {
   name: 'Panel',
   components: {
-    MainView
+    MainView,
+    StartView
   },
   data() {
-    return {
-      learnMore: 'Learn More',
-      link: 'https://gamechangercharity.org/',
-      state: 'Main'
-    }
+    return {}
   },
   sockets: {
     connect: () => {
@@ -38,9 +41,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setMosaicState', 'setDonationGoal', 'setDonationTotal', 'setDonators']),
     printInfo() {
       twitch.rig.log(`Audience: ${userID} is watching Streamer ${channelID}`);
     }
+  },
+  computed: {
+    ...mapGetters(['getMosaicState', 'getDonationGoal', 'getDonators', 'getDonationTotal']),
   },
   async beforeMount() {
     await window.Twitch.ext.onAuthorized((auth) => {

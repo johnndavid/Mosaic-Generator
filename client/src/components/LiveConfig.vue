@@ -35,14 +35,21 @@ export default {
     connect: () => {
       // twitch.rig.log('Streamer has connected to socket');
     },
-    Campain_State: function(campain) {
+    Campain_State: function({
+      mosaicState,
+      donationTotal,
+      donationGoal,
+      donators
+    }) {
       twitch.rig.log("Streamer has recieved new Campain State");
-      console.log('LiveConfig');
-      this.setCampainState(campain);
+      this.setMosaicState(mosaicState);
+      this.setDonationTotal(donationTotal);
+      this.setDonationGoal(donationGoal);
+      this.setDonators(donators);
     }
   },
   methods: {
-    ...mapActions(['setChannelID', 'setMosaicState', 'setCampainState']),
+    ...mapActions(['setMosaicState', 'setDonationGoal', 'setDonationTotal', 'setDonators']),
     messageViewers() {
       this.$socket.emit('message_room', {
         "channelID": channelID,

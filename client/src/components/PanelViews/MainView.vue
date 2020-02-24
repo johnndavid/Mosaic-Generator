@@ -1,7 +1,7 @@
 <template>
 <div class="user-view">
   <div class="main-view container">
-    <b-img class="icon row col-6" center rounded="circle" :src="require('../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
+    <b-img class="icon row col-6" center rounded="circle" :src="require('../../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
     <b-button class="col-6" center :href="link"> {{learnMore}} </b-button>
   </div>
 </div>
