@@ -3,7 +3,7 @@
   <h4>Progress: ${{getDonationTotal}} / ${{ getDonationGoal }}</h4>
   <div class="col-12">
     <b-progress :max="getDonationGoal" height="3rem">
-      <b-progress-bar :value="getDonationTotal" variant="success" show-progress animated>
+      <b-progress-bar :value="getDonationTotal" variant="success" animated>
       </b-progress-bar>
     </b-progress>
   </div>
