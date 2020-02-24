@@ -1,51 +1,48 @@
 <template>
 <div class="broadcaster-view container">
   <b-img class="icon col-3" center rounded="circle" :src="require('../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
-  <div class="form">
+  <b-form class="form" @submit="onSubmit">
     <h4>Mosaic Image</h4>
-    <b-form-file class="input" v-model="file" placeholder="Upload Your Image" drop-placeholder="Drop Your Image Here" accept="image/*" :required="true"> </b-form-file>
+    <b-form-file class="input" v-model="form.file" placeholder="Upload Your Image" drop-placeholder="Drop Your Image Here" accept="image/*" required> </b-form-file>
     <h4>Goal</h4>
-    <b-form-input id="range-1" v-model="donationGoal" type="range" min="0" max="1000"></b-form-input>
-    <b-form-input v-model="donationGoal" type="number"></b-form-input>
-  </div>
-  <div class="buttons">
-    <b-button class="primary-btn" v-if="isStart" @click="changeState()">Start</b-button>
-    <b-button class="stop" v-if="isStop" @click="changeState()">Stop</b-button>
-    <b-button class="primary-btn" v-if="isReveal" @click="changeState()">Reveal</b-button>
-    <b-button class="primary-btn" v-if="isReset" @click="changeState()">Reset</b-button>
-  </div>
+    <b-form-input id="range-1" v-model="form.donationGoal" type="range" min="0" max="1000"></b-form-input>
+    <b-form-input v-model="form.donationGoal" type="number" placeholder="500"></b-form-input>
+    <b-button class="primary-btn" type="submit">{{getMosaicState}}</b-button>
+  </b-form>
 </div>
 </template>
 
 <script>
-let userID = '';
+import {
+  mapGetters,
+  mapActions
+} from 'vuex';
+
 let channelID = '';
 const twitch = window.Twitch.ext;
 
-
 export default {
-  name: 'Panel',
+  name: 'LiveConfig',
   data() {
     return {
-      donationGoal: 500,
-      file: null,
-      mosaicState: 'Start',
+      form: {
+        donationGoal: this.getDonationGoal,
+        file: null,
+      }
     }
   },
   sockets: {
     connect: () => {
       // twitch.rig.log('Streamer has connected to socket');
     },
-    Campain_State: (campain) => {
+    Campain_State: function(campain) {
       twitch.rig.log("Streamer has recieved new Campain State");
-      this.mosaicState = campain.mosaicState;
-      console.log(this.mosaicState);
+      console.log('LiveConfig');
+      this.setCampainState(campain);
     }
   },
   methods: {
-    printInfo() {
-      // twitch.rig.log(`Streamer: ${channelID} is now streaming with a userID of ${userID}`);
-    },
+    ...mapActions(['setChannelID', 'setMosaicState', 'setCampainState']),
     messageViewers() {
       this.$socket.emit('message_room', {
         "channelID": channelID,
@@ -57,26 +54,18 @@ export default {
         'channelID': channelID
       })
     },
+    onSubmit(evt) {
+      evt.preventDefault();
+      // upload file to the server
+      // this.changeState;
+    },
   },
   computed: {
-    isStart() {
-      return this.mosaicState === 'Start';
-    },
-    isStop() {
-      return this.mosaicState === 'Stop';
-    },
-    isReveal() {
-      return this.mosaicState === 'Reveal';
-    },
-    isReset() {
-      return this.mosaicState === 'Reset';
-    },
+    ...mapGetters(['getMosaicState', 'getDonationGoal']),
   },
   async beforeMount() {
     await twitch.onAuthorized((auth) => {
-      userID = auth.userId;
       channelID = auth.channelId;
-      this.printInfo();
       this.$socket.emit('streamer_join', {
         'channelID': channelID,
       });

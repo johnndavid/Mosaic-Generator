@@ -13,7 +13,7 @@ var StreamList = /** @class */ (function () {
     };
     StreamList.prototype.add = function (channelID) {
         if (this.inStreamList(channelID)) {
-            this.streamList[channelID] = new Campain_1.default(channelID);
+            this.streamList[channelID] = new Campain_1.default();
         }
     };
     StreamList.prototype.state = function (channelID) {

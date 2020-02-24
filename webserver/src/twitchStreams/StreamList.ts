@@ -13,7 +13,7 @@ export default class StreamList {
 
   add(channelID: string) {
     if (this.inStreamList(channelID)) {
-      this.streamList[channelID] = new Campain(channelID);
+      this.streamList[channelID] = new Campain();
     }
   }
 

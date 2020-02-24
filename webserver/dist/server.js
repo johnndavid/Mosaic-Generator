@@ -48,6 +48,7 @@ serverio.on('connection', function (socket) {
         socket.join("" + channelID, function () {
             console.log("JOIN_ROOM " + channelID + ": Streamer joined");
         });
+        serverio.in("" + channelID).emit('Campain_State', streams.streamList[channelID]);
     });
     socket.on('change_state', function (_a) {
         var channelID = _a.channelID;

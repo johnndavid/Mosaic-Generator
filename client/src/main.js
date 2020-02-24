@@ -8,6 +8,7 @@ import socketio from 'socket.io-client';
 import BootStrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import store from './store';
 
 // export const SocketInstance = new socketio('http://localhost:3000');
 // Vue.use(VueSocketIO, SocketInstance)
@@ -25,6 +26,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
