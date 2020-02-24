@@ -14,6 +14,20 @@ export default class Campain {
   }
 
   stateChange() {
+    if (this.mosaicState === 'Start') {
+      this.mosaicState = 'Stop';
+    } else if (this.mosaicState === 'Stop') {
+      this.mosaicState = 'Reveal';
+    } else if (this.mosaicState === 'Reveal') {
+      this.mosaicState = 'Reset';
+    } else if (this.mosaicState === 'Reset') {
+      this.mosaicState = 'Start';
+    }
+    return this.state();
+  }
+
+  state() {
+    return { state: this.mosaicState, donationTotal: this.donationTotal, donationGoal: this.donationGoal, }
   }
 
 

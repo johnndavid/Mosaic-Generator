@@ -3,16 +3,16 @@
   <b-img class="icon col-3" center rounded="circle" :src="require('../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
   <div class="form">
     <h4>Mosaic Image</h4>
-    <b-form-file class="input" v-model="file" placeholder="Upload Your Image" drop-placeholder="Drop Your Image Here" accept="image/*" required="true"> </b-form-file>
+    <b-form-file class="input" v-model="file" placeholder="Upload Your Image" drop-placeholder="Drop Your Image Here" accept="image/*" :required="true"> </b-form-file>
     <h4>Goal</h4>
     <b-form-input id="range-1" v-model="donationGoal" type="range" min="0" max="1000"></b-form-input>
     <b-form-input v-model="donationGoal" type="number"></b-form-input>
   </div>
   <div class="buttons">
-    <b-button class="primary-btn" v-show="(btnState === 'Start')" @click="messageViewers()">Start</b-button>
-    <b-button class="stop" v-show="(btnState === 'Stop')" @click="stop()">Stop</b-button>
-    <b-button class="primary-btn" v-show="(btnState === 'Reveal')" @click="reveal()">Reveal</b-button>
-    <b-button class="primary-btn" v-show="(btnState === 'Reset')" @click="reset()">Reset</b-button>
+    <b-button class="primary-btn" v-if="isStart" @click="changeState()">Start</b-button>
+    <b-button class="stop" v-if="isStop" @click="changeState()">Stop</b-button>
+    <b-button class="primary-btn" v-if="isReveal" @click="changeState()">Reveal</b-button>
+    <b-button class="primary-btn" v-if="isReset" @click="changeState()">Reset</b-button>
   </div>
 </div>
 </template>
@@ -29,13 +29,18 @@ export default {
     return {
       donationGoal: 500,
       file: null,
-      btnState: 'Start',
+      mosaicState: 'Start',
     }
   },
   sockets: {
     connect: () => {
       // twitch.rig.log('Streamer has connected to socket');
     },
+    Campain_State: (campain) => {
+      twitch.rig.log("Streamer has recieved new Campain State");
+      this.mosaicState = campain.mosaicState;
+      console.log(this.mosaicState);
+    }
   },
   methods: {
     printInfo() {
@@ -43,30 +48,29 @@ export default {
     },
     messageViewers() {
       this.$socket.emit('message_room', {
-        "channel": channelID,
-        "message": `welcome to channel ${channelID}`
+        "channelID": channelID,
+        "message": `welcome to channelID ${channelID}`
       })
     },
-    start() {
-      // function for start button
-      console.log("Stop");
-      this.btnState = 'Stop';
+    changeState() {
+      this.$socket.emit('change_state', {
+        'channelID': channelID
+      })
     },
-    stop() {
-      // function for stop button
-      console.log("Reveal");
-      this.btnState = 'Reveal';
+  },
+  computed: {
+    isStart() {
+      return this.mosaicState === 'Start';
     },
-    reveal() {
-      // function for reveal button
-      console.log("Reset");
-      this.btnState = 'Reset';
+    isStop() {
+      return this.mosaicState === 'Stop';
     },
-    reset() {
-      // function for reset button
-      console.log("Start");
-      this.btnState = 'Start';
-    }
+    isReveal() {
+      return this.mosaicState === 'Reveal';
+    },
+    isReset() {
+      return this.mosaicState === 'Reset';
+    },
   },
   async beforeMount() {
     await twitch.onAuthorized((auth) => {
@@ -74,7 +78,7 @@ export default {
       channelID = auth.channelId;
       this.printInfo();
       this.$socket.emit('streamer_join', {
-        'channel': channelID,
+        'channelID': channelID,
       });
     })
   },

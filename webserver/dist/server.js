@@ -25,29 +25,38 @@ http.listen(PORT, function () {
 serverio.on('connection', function (socket) {
     // Audience controls
     socket.on('join room', function (_a) {
-        var channel = _a.channel;
-        socket.join("" + channel, function () {
-            console.log("JOIN_ROOM " + channel + ": User joined");
-            // serverio.to('${socket.id}').emit('Campain_State', streams[channel].state())
+        var channelID = _a.channelID;
+        socket.join("" + channelID, function () {
+            console.log("JOIN_ROOM " + channelID + ": User joined");
+            // serverio.to('${socket.id}').emit('Campain_State', streams[channelID].state())
             // get the state of the current campain
         });
     });
     socket.on('request_state', function (_a) {
-        var channel = _a.channel;
-        // serverio.to('${socket.id}').emit('Campain_State', streams[channel].state())
+        var channelID = _a.channelID;
+        console.log("request_state recieved");
+        if (streams.streamList[channelID]) {
+            console.log("request_state sent");
+            serverio.to("" + socket.id).emit('Campain_State', streams.streamList[channelID].state());
+        }
     });
     //Streamer controls
     socket.on('streamer_join', function (_a) {
-        var channel = _a.channel;
-        streams.add(channel);
-        console.log("ChannelID " + channel + " was added to the streamList");
-        socket.join("" + channel, function () {
-            console.log("JOIN_ROOM " + channel + ": Streamer joined");
+        var channelID = _a.channelID;
+        streams.add(channelID);
+        console.log("ChannelID " + channelID + " was added to the streamList");
+        socket.join("" + channelID, function () {
+            console.log("JOIN_ROOM " + channelID + ": Streamer joined");
         });
     });
+    socket.on('change_state', function (_a) {
+        var channelID = _a.channelID;
+        streams.streamList[channelID].stateChange();
+        serverio.in("" + channelID).emit('Campain_State', streams.streamList[channelID]);
+    });
     socket.on('message_room', function (_a) {
-        var channel = _a.channel, message = _a.message;
-        serverio.to("" + channel).emit('room_message', message);
+        var channelID = _a.channelID, message = _a.message;
+        serverio.to("" + channelID).emit('room_message', message);
         console.log(streams);
     });
 });

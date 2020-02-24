@@ -9,6 +9,22 @@ var Campain = /** @class */ (function () {
         this.donationGoal = 0;
     }
     Campain.prototype.stateChange = function () {
+        if (this.mosaicState === 'Start') {
+            this.mosaicState = 'Stop';
+        }
+        else if (this.mosaicState === 'Stop') {
+            this.mosaicState = 'Reveal';
+        }
+        else if (this.mosaicState === 'Reveal') {
+            this.mosaicState = 'Reset';
+        }
+        else if (this.mosaicState === 'Reset') {
+            this.mosaicState = 'Start';
+        }
+        return this.state();
+    };
+    Campain.prototype.state = function () {
+        return { state: this.mosaicState, donationTotal: this.donationTotal, donationGoal: this.donationGoal, };
     };
     return Campain;
 }());

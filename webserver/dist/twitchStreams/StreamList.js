@@ -8,9 +8,22 @@ var StreamList = /** @class */ (function () {
     function StreamList() {
         this.streamList = {};
     }
+    StreamList.prototype.inStreamList = function (channelID) {
+        return (!Object.keys(this.streamList).includes(channelID));
+    };
     StreamList.prototype.add = function (channelID) {
-        if (!Object.keys(this.streamList).includes(channelID)) {
+        if (this.inStreamList(channelID)) {
             this.streamList[channelID] = new Campain_1.default(channelID);
+        }
+    };
+    StreamList.prototype.state = function (channelID) {
+        if (this.inStreamList(channelID)) {
+            return this.streamList[channelID].state();
+        }
+    };
+    StreamList.prototype.changeState = function (channelID) {
+        if (this.inStreamList(channelID)) {
+            return this.streamList[channelID].changeState();
         }
     };
     StreamList.prototype.delete = function (channelID) {

@@ -33,6 +33,7 @@ export default {
       // twitch.rig.log(message);
     },
     Campain_State: (campain) => {
+      twitch.rig.log('Viewer campain state has been recieved');
       // do something with a campain state
     }
   },
@@ -49,8 +50,11 @@ export default {
       // put what you want to do with this information in here
       // this.printInfo();
       this.$socket.emit('join room', {
-        "channel": channelID
+        "channelID": channelID
       })
+      this.$socket.emit('request_state', {
+        "channelID": channelID
+      });
 
     })
   }

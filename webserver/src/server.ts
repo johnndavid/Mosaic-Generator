@@ -25,29 +25,38 @@ http.listen(PORT, () => {
 serverio.on('connection', (socket) => {
 
   // Audience controls
-  socket.on('join room', ({ channel }) => {
-    socket.join(`${channel}`, () => {
-      console.log(`JOIN_ROOM ${channel}: User joined`);
-      // serverio.to('${socket.id}').emit('Campain_State', streams[channel].state())
+  socket.on('join room', ({ channelID }) => {
+    socket.join(`${channelID}`, () => {
+      console.log(`JOIN_ROOM ${channelID}: User joined`);
+      // serverio.to('${socket.id}').emit('Campain_State', streams[channelID].state())
       // get the state of the current campain
     });
   })
 
-  socket.on('request_state', ({ channel }) => {
-    // serverio.to('${socket.id}').emit('Campain_State', streams[channel].state())
+  socket.on('request_state', ({ channelID }) => {
+    console.log("request_state recieved")
+    if (streams.streamList[channelID]) {
+      console.log("request_state sent")
+      serverio.to(`${socket.id}`).emit('Campain_State', streams.streamList[channelID].state())
+    }
   })
 
   //Streamer controls
-  socket.on('streamer_join', ({ channel }) => {
-    streams.add(channel);
-    console.log(`ChannelID ${channel} was added to the streamList`);
-    socket.join(`${channel}`, () => {
-      console.log(`JOIN_ROOM ${channel}: Streamer joined`);
+  socket.on('streamer_join', ({ channelID }) => {
+    streams.add(channelID);
+    console.log(`ChannelID ${channelID} was added to the streamList`);
+    socket.join(`${channelID}`, () => {
+      console.log(`JOIN_ROOM ${channelID}: Streamer joined`);
     })
   })
 
-  socket.on('message_room', ({ channel, message }) => {
-    serverio.to(`${channel}`).emit('room_message', message);
+  socket.on('change_state', ({ channelID }) => {
+    streams.streamList[channelID].stateChange();
+    serverio.in(`${channelID}`).emit('Campain_State', streams.streamList[channelID]);
+  })
+
+  socket.on('message_room', ({ channelID, message }) => {
+    serverio.to(`${channelID}`).emit('room_message', message);
     console.log(streams);
   })
 });

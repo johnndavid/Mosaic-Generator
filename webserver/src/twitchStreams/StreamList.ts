@@ -7,9 +7,25 @@ export default class StreamList {
     this.streamList = {};
   }
 
+  inStreamList(channelID: string): boolean {
+    return (!Object.keys(this.streamList).includes(channelID));
+  }
+
   add(channelID: string) {
-    if (!Object.keys(this.streamList).includes(channelID)) {
+    if (this.inStreamList(channelID)) {
       this.streamList[channelID] = new Campain(channelID);
+    }
+  }
+
+  state(channelID: string) {
+    if (this.inStreamList(channelID)) {
+      return this.streamList[channelID].state();
+    }
+  }
+
+  changeState(channelID: string) {
+    if (this.inStreamList(channelID)) {
+      return this.streamList[channelID].changeState();
     }
   }
 
