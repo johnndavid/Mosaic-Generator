@@ -33,13 +33,13 @@ export default {
     }
   },
   sockets: {
-    connect: (resp) => {
-      twitch.rig.log('Streamer has connected to socket');
-    }
+    connect: () => {
+      // twitch.rig.log('Streamer has connected to socket');
+    },
   },
   methods: {
     printInfo() {
-      twitch.rig.log(`Streamer: ${channelID} is now streaming with a userID of ${userID}`);
+      // twitch.rig.log(`Streamer: ${channelID} is now streaming with a userID of ${userID}`);
     },
     messageViewers() {
       this.$socket.emit('message_room', {
@@ -73,11 +73,12 @@ export default {
       userID = auth.userId;
       channelID = auth.channelId;
       this.printInfo();
-      this.$socket.emit('streamer', {
+      this.$socket.emit('streamer_join', {
         'channel': channelID,
       });
     })
   },
+
 }
 </script>
 
@@ -88,6 +89,7 @@ export default {
   grid-template: "icon"auto "form"auto "buttons"auto / 1fr;
   grid-gap: 5px;
   justify-items: center;
+  margin-top: 3px;
 }
 
 .custom-file-input~.custom-file-label::after {

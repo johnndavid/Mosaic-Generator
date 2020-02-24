@@ -1,4 +1,4 @@
-import Stream from './Stream';
+import Campain from './Campain';
 
 export default class StreamList {
   streamList: any;
@@ -7,13 +7,10 @@ export default class StreamList {
     this.streamList = {};
   }
 
-  add(channelID: string, channelSocket: any) {
-    if (Object.keys(this.streamList).includes(channelID)) {
-      if (!(channelSocket === this.streamList[channelID].socket)) {
-        this.streamList[channelID].setSocket(channelSocket);
-      }
+  add(channelID: string) {
+    if (!Object.keys(this.streamList).includes(channelID)) {
+      this.streamList[channelID] = new Campain(channelID);
     }
-    this.streamList[channelID] = new Stream(channelID, channelSocket);
   }
 
   delete(channelID: string) {

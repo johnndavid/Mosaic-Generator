@@ -23,22 +23,27 @@ http.listen(PORT, function () {
     console.log("Listening on " + PORT);
 });
 serverio.on('connection', function (socket) {
+    // Audience controls
     socket.on('join room', function (_a) {
         var channel = _a.channel;
         socket.join("" + channel, function () {
-            console.log("JOIN_ROOM: User joined >>> " + channel);
+            console.log("JOIN_ROOM " + channel + ": User joined");
+            // serverio.to('${socket.id}').emit('Campain_State', streams[channel].state())
+            // get the state of the current campain
         });
     });
-    socket.on('streamer', function (_a) {
+    socket.on('request_state', function (_a) {
         var channel = _a.channel;
-        streams.add(channel, socket);
+        // serverio.to('${socket.id}').emit('Campain_State', streams[channel].state())
+    });
+    //Streamer controls
+    socket.on('streamer_join', function (_a) {
+        var channel = _a.channel;
+        streams.add(channel);
         console.log("ChannelID " + channel + " was added to the streamList");
         socket.join("" + channel, function () {
-            console.log("JOIN_ROOM: Sreamer joined >>> " + channel);
+            console.log("JOIN_ROOM " + channel + ": Streamer joined");
         });
-    });
-    socket.on('disconnect', function (socket) {
-        console.log('disconnected');
     });
     socket.on('message_room', function (_a) {
         var channel = _a.channel, message = _a.message;

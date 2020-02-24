@@ -27,10 +27,13 @@ export default {
   },
   sockets: {
     connect: () => {
-      twitch.rig.log(`Audience: has connected to socket`);
+      // twitch.rig.log(`Audience: has connected to socket`);
     },
     room_message: (message) => {
-      twitch.rig.log(message);
+      // twitch.rig.log(message);
+    },
+    Campain_State: (campain) => {
+      // do something with a campain state
     }
   },
   methods: {
@@ -44,7 +47,7 @@ export default {
       channelID = auth.channelId;
       token = auth.token;
       // put what you want to do with this information in here
-      this.printInfo();
+      // this.printInfo();
       this.$socket.emit('join room', {
         "channel": channelID
       })

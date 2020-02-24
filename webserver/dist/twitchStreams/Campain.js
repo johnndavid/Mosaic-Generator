@@ -4,9 +4,11 @@ var Campain = /** @class */ (function () {
     function Campain(channelID) {
         this.channelID = channelID;
         this.mosaicState = 'Start';
+        this.donators = [];
+        this.donationTotal = 0;
+        this.donationGoal = 0;
     }
-    Campain.prototype.setSocket = function (socket) {
-        this.socket = socket;
+    Campain.prototype.stateChange = function () {
     };
     return Campain;
 }());
