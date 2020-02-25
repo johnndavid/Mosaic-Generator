@@ -3,7 +3,7 @@ const state = {
   donationTotal: 250,
   donationGoal: 500,
   donators: [],
-  inputFile: '',
+  inputFile: null,
 };
 
 const getters = {

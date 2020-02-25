@@ -2,6 +2,7 @@ import express from "express";
 import http_lib from 'http';
 import path_lib from 'path';
 import io from 'socket.io';
+import fileUpload from 'express-fileupload';
 import StreamList from './twitchStreams/StreamList';
 
 const PORT = process.env.PORT || 3000;
@@ -13,22 +14,37 @@ app.use(express.static(path_lib.join(__dirname, 'public')));
 const http = http_lib.createServer(app);
 const serverio = io(http);
 
-// app.get('/', (req, response) => {
-//   // Don't know what this is yet
-//   console.log(req);
+// app.use(fileUpload());
+
+// app.post('/upload', (req, res) => {
+//   if (!req.files || Object.keys(req.files).length === 0) {
+//     return res.status(400).send('No files were uploaded.');
+//   }
+//
+//   let sampleFile = req.files.sampleFile;
+//
+//   sampleFile.mv('/imgs/filename.jpg', (err) => {
+//     if (err) {
+//       return res.status(500).send(err);
+//     }
+//     res.send('File Upload');
+//   })
 // })
 
 http.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });
 
+
+
 serverio.on('connection', (socket) => {
 
   // Audience controls
   socket.on('join room', ({ channelID }) => {
+    // add audience to a room based on the channelID
     socket.join(`${channelID}`, () => {
       console.log(`JOIN_ROOM ${channelID}: User joined`);
-      // serverio.to('${socket.id}').emit('Campain_State', streams[channelID].state())
+      serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID].state())
       // get the state of the current campain
     });
   })

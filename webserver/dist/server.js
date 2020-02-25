@@ -15,9 +15,20 @@ var app = express_1.default();
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 var http = http_1.default.createServer(app);
 var serverio = socket_io_1.default(http);
-// app.get('/', (req, response) => {
-//   // Don't know what this is yet
-//   console.log(req);
+// app.use(fileUpload());
+// app.post('/upload', (req, res) => {
+//   if (!req.files || Object.keys(req.files).length === 0) {
+//     return res.status(400).send('No files were uploaded.');
+//   }
+//
+//   let sampleFile = req.files.sampleFile;
+//
+//   sampleFile.mv('/imgs/filename.jpg', (err) => {
+//     if (err) {
+//       return res.status(500).send(err);
+//     }
+//     res.send('File Upload');
+//   })
 // })
 http.listen(PORT, function () {
     console.log("Listening on " + PORT);
@@ -26,9 +37,10 @@ serverio.on('connection', function (socket) {
     // Audience controls
     socket.on('join room', function (_a) {
         var channelID = _a.channelID;
+        // add audience to a room based on the channelID
         socket.join("" + channelID, function () {
             console.log("JOIN_ROOM " + channelID + ": User joined");
-            // serverio.to('${socket.id}').emit('Campain_State', streams[channelID].state())
+            serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID].state());
             // get the state of the current campain
         });
     });

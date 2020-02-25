@@ -63,6 +63,9 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
+      this.$socket.emit('change_state', {
+        "channelID": channelID
+      });
       // upload file to the server
       // this.changeState;
     },
