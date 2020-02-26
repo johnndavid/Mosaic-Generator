@@ -7,6 +7,7 @@ var express_1 = __importDefault(require("express"));
 var http_1 = __importDefault(require("http"));
 var path_1 = __importDefault(require("path"));
 var socket_io_1 = __importDefault(require("socket.io"));
+// import fileUpload from 'express-fileupload';
 var StreamList_1 = __importDefault(require("./twitchStreams/StreamList"));
 var PORT = process.env.PORT || 3000;
 var streams = new StreamList_1.default();
@@ -40,17 +41,8 @@ serverio.on('connection', function (socket) {
         // add audience to a room based on the channelID
         socket.join("" + channelID, function () {
             console.log("JOIN_ROOM " + channelID + ": User joined");
-            serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID].state());
-            // get the state of the current campain
+            serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID]);
         });
-    });
-    socket.on('request_state', function (_a) {
-        var channelID = _a.channelID;
-        console.log("request_state recieved");
-        if (streams.streamList[channelID]) {
-            console.log("request_state sent");
-            serverio.to("" + socket.id).emit('Campain_State', streams.streamList[channelID].state());
-        }
     });
     //Streamer controls
     socket.on('streamer_join', function (_a) {
@@ -62,17 +54,44 @@ serverio.on('connection', function (socket) {
         });
         serverio.in("" + channelID).emit('Campain_State', streams.streamList[channelID]);
     });
-    socket.on('change_state', function (_a) {
-        var channelID = _a.channelID;
-        streams.streamList[channelID].stateChange();
-        serverio.in("" + channelID).emit('Campain_State', streams.streamList[channelID]);
-    });
     socket.on('message_room', function (_a) {
         var channelID = _a.channelID, message = _a.message;
         serverio.to("" + channelID).emit('room_message', message);
         console.log(streams);
     });
+    socket.on('Start_State', function (_a) {
+        var channelID = _a.channelID, baseFile = _a.baseFile;
+        // do something when in start  state
+        // streams.streamList[channelID].setFile(file);
+        streams.streamList[channelID].saveBaseFile(process.cwd() + "/imgs/" + channelID + "/baseFile", baseFile);
+        // serverio.in(`${channelID}`).emit('Campain_State', streams.streamList[channelID])
+        emitChangeState(serverio, channelID);
+    });
+    socket.on('Stop_State', function (_a) {
+        var channelID = _a.channelID, file = _a.file;
+        // Start creating a mosaic image
+        streams.streamList[channelID].generateMosaic(channelID);
+        // serverio.to(`${socket.id}`).emit('Reveal_Enabled');
+        emitChangeState(serverio, channelID);
+    });
+    socket.on('Reveal_State', function (_a) {
+        var channelID = _a.channelID;
+        // send an link  to an image on the server
+        if (streams.streamList[channelID].isGenerated) {
+            emitChangeState(serverio, channelID);
+        }
+    });
+    socket.on('Reset_State', function (_a) {
+        var channelID = _a.channelID;
+        // Create a new campainstate object
+        streams.add(channelID);
+        emitChangeState(serverio, channelID);
+    });
 });
+function emitChangeState(server, channelID) {
+    streams.streamList[channelID].stateChange();
+    serverio.in("" + channelID).emit('Campain_State', streams.streamList[channelID]);
+}
 function dateString() {
     return new Date().toString();
 }

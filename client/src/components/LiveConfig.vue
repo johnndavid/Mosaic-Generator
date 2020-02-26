@@ -3,11 +3,13 @@
   <b-img class="icon col-3" center rounded="circle" :src="require('../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
   <b-form class="form" @submit="onSubmit">
     <h4>Mosaic Image</h4>
+    <!-- <b-form-file class="input" v-model="form.file" placeholder="Upload Your Image" drop-placeholder="Drop Your Image Here" accept="image/*"> </b-form-file> -->
     <b-form-file class="input" v-model="form.file" placeholder="Upload Your Image" drop-placeholder="Drop Your Image Here" accept="image/*" required> </b-form-file>
     <h4>Goal</h4>
     <b-form-input id="range-1" v-model="form.donationGoal" type="range" min="0" max="1000"></b-form-input>
     <b-form-input v-model="form.donationGoal" type="number" placeholder="500"></b-form-input>
-    <b-button class="primary-btn" type="submit">{{getMosaicState}}</b-button>
+    <b-button v-if="!this.isReveal" class="primary-btn" type="submit">{{getMosaicState}}</b-button>
+    <b-button v-if="this.isReveal" class="primary-btn" type="submit">{{getMosaicState}}</b-button>
   </b-form>
 </div>
 </template>
@@ -28,7 +30,8 @@ export default {
       form: {
         donationGoal: this.getDonationGoal,
         file: null,
-      }
+      },
+      revealEnable: false,
     }
   },
   sockets: {
@@ -46,6 +49,13 @@ export default {
       this.setDonationTotal(donationTotal);
       this.setDonationGoal(donationGoal);
       this.setDonators(donators);
+
+      if (this.getMosaicState === "Reset") {
+        this.revealEnable = false;
+      }
+    },
+    Reveal_Enabled: function() {
+      this.revealEnable = !this.revealEnable;
     }
   },
   methods: {
@@ -63,8 +73,12 @@ export default {
     },
     onSubmit(evt) {
       evt.preventDefault();
-      this.$socket.emit('change_state', {
-        "channelID": channelID
+      if (this.getMosaicState && this.revealEnable) {
+        return;
+      }
+      this.$socket.emit(`${this.getMosaicState}_State`, {
+        "channelID": channelID,
+        "baseFile": this.form.file,
       });
       // upload file to the server
       // this.changeState;
@@ -72,6 +86,9 @@ export default {
   },
   computed: {
     ...mapGetters(['getMosaicState', 'getDonationGoal']),
+    isReveal: function() {
+      return this.getMosaicState === "Reveal";
+    },
   },
   async beforeMount() {
     await twitch.onAuthorized((auth) => {
