@@ -2,6 +2,10 @@
 <div class="user-view">
   <MainView />
   <StartView />
+  <RevealView />
+  <!-- <MainView v-if="this.isMainState" />
+  <StartView v-else="this.isDonationState" />
+  <RevealView v-else="this.isRevealState" /> -->
 </div>
 </template>
 
@@ -12,57 +16,64 @@ import {
 } from 'vuex';
 import MainView from "./PanelViews/MainView";
 import StartView from "./PanelViews/StartView";
+import RevealView from "./PanelViews/RevealView";
 
-let userID = "";
 let channelID = "";
-let token = "";
 const twitch = window.Twitch.ext;
-
 
 export default {
   name: 'Panel',
   components: {
     MainView,
-    StartView
+    StartView,
+    RevealView
   },
   data() {
-    return {}
+    return {
+      view: "MainView",
+      channelID: ""
+    }
   },
   sockets: {
-    connect: () => {
-      // twitch.rig.log(`Audience: has connected to socket`);
-    },
-    room_message: (message) => {
-      // twitch.rig.log(message);
-    },
-    Campain_State: (campain) => {
-      twitch.rig.log('Viewer campain state has been recieved');
-      // do something with a campain state
+    connect: () => {},
+    Campain_State: function({
+      mosaicState,
+      donationTotal,
+      donationGoal,
+      donators
+    }) {
+      twitch.rig.log("User has recieved new Campain State");
+      this.setMosaicState(mosaicState);
+      this.setDonationTotal(donationTotal);
+      this.setDonationGoal(donationGoal);
+      this.setDonators(donators);
     }
   },
   methods: {
-    ...mapActions(['setMosaicState', 'setDonationGoal', 'setDonationTotal', 'setDonators']),
+    ...mapActions(['setMosaicState', 'setDonationGoal', 'setDonationTotal', 'setDonators', 'setChannelID']),
     printInfo() {
       twitch.rig.log(`Audience: ${userID} is watching Streamer ${channelID}`);
     }
   },
   computed: {
-    ...mapGetters(['getMosaicState', 'getDonationGoal', 'getDonators', 'getDonationTotal']),
+    ...mapGetters(['getMosaicState', 'getDonationGoal', 'getDonators', 'getDonationTotal', 'getChannelID']),
+    isMainState() {
+      return this.getMosaicState === "Start";
+    },
+    isDonationState() {
+      return this.getMosaicState === "Stop";
+    },
+    isRevealState() {
+      return this.getMosaicState === "Reveal";
+    },
   },
   async beforeMount() {
     await window.Twitch.ext.onAuthorized((auth) => {
-      userID = auth.userId;
       channelID = auth.channelId;
-      token = auth.token;
-      // put what you want to do with this information in here
-      // this.printInfo();
+      this.setChannelID(auth.channelId);
       this.$socket.emit('join room', {
         "channelID": channelID
       })
-      this.$socket.emit('request_state', {
-        "channelID": channelID
-      });
-
     })
   }
 }

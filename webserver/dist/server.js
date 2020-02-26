@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var http_1 = __importDefault(require("http"));
-var path_1 = __importDefault(require("path"));
 var socket_io_1 = __importDefault(require("socket.io"));
 // import fileUpload from 'express-fileupload';
 var StreamList_1 = __importDefault(require("./twitchStreams/StreamList"));
@@ -13,24 +12,11 @@ var PORT = process.env.PORT || 3000;
 var streams = new StreamList_1.default();
 // Express Server
 var app = express_1.default();
-app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+// app.use(express.static(path_lib.join(__dirname, 'public')));
 var http = http_1.default.createServer(app);
 var serverio = socket_io_1.default(http);
-// app.use(fileUpload());
-// app.post('/upload', (req, res) => {
-//   if (!req.files || Object.keys(req.files).length === 0) {
-//     return res.status(400).send('No files were uploaded.');
-//   }
-//
-//   let sampleFile = req.files.sampleFile;
-//
-//   sampleFile.mv('/imgs/filename.jpg', (err) => {
-//     if (err) {
-//       return res.status(500).send(err);
-//     }
-//     res.send('File Upload');
-//   })
-// })
+console.log("" + process.cwd());
+app.use('/imgs', express_1.default.static(process.cwd() + "/imgs"));
 http.listen(PORT, function () {
     console.log("Listening on " + PORT);
 });
@@ -41,8 +27,8 @@ serverio.on('connection', function (socket) {
         // add audience to a room based on the channelID
         socket.join("" + channelID, function () {
             console.log("JOIN_ROOM " + channelID + ": User joined");
-            serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID]);
         });
+        serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID]);
     });
     //Streamer controls
     socket.on('streamer_join', function (_a) {

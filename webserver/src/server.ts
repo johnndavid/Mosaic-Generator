@@ -10,32 +10,16 @@ const streams: StreamList = new StreamList();
 
 // Express Server
 const app = express();
-app.use(express.static(path_lib.join(__dirname, 'public')));
+// app.use(express.static(path_lib.join(__dirname, 'public')));
 const http = http_lib.createServer(app);
 const serverio = io(http);
 
-// app.use(fileUpload());
-
-// app.post('/upload', (req, res) => {
-//   if (!req.files || Object.keys(req.files).length === 0) {
-//     return res.status(400).send('No files were uploaded.');
-//   }
-//
-//   let sampleFile = req.files.sampleFile;
-//
-//   sampleFile.mv('/imgs/filename.jpg', (err) => {
-//     if (err) {
-//       return res.status(500).send(err);
-//     }
-//     res.send('File Upload');
-//   })
-// })
+console.log(`${process.cwd()}`)
+app.use('/imgs', express.static(`${process.cwd()}/imgs`));
 
 http.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });
-
-
 
 serverio.on('connection', (socket) => {
 
@@ -44,8 +28,8 @@ serverio.on('connection', (socket) => {
     // add audience to a room based on the channelID
     socket.join(`${channelID}`, () => {
       console.log(`JOIN_ROOM ${channelID}: User joined`);
-      serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID])
     });
+    serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID])
   })
 
   //Streamer controls

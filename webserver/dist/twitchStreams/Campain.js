@@ -103,7 +103,7 @@ var Campain = /** @class */ (function () {
                         _a = MNG_1.default.bind;
                         _b = jimp_image_1.default.bind;
                         return [4 /*yield*/, jimp_image_1.default.read(process.cwd() + "/imgs/" + channelID + "/baseFile.jpg")];
-                    case 1: return [4 /*yield*/, new (_a.apply(MNG_1.default, [void 0, new (_b.apply(jimp_image_1.default, [void 0, _c.sent()]))(), this.getDonationsURLS()]))().generate(process.cwd() + "/imgs/" + channelID + "/MosaicImage.jpg")];
+                    case 1: return [4 /*yield*/, new (_a.apply(MNG_1.default, [void 0, new (_b.apply(jimp_image_1.default, [void 0, _c.sent()]))(), this.getDonationsURLS()]))().generate(process.cwd() + "/imgs/" + channelID + "/MosaicImage")];
                     case 2:
                         _c.sent();
                         this.isGenerated = true;
@@ -115,7 +115,10 @@ var Campain = /** @class */ (function () {
     return Campain;
 }());
 exports.default = Campain;
-var URLS = report_json_1.DATA.donations.slice(0, 10).map(function (_a) {
+// const URLS = DATA.donations.slice(0, 10).map(({ profile_image_url }) => {
+//   return { "urls": profile_image_url }
+// });
+var URLS = report_json_1.DATA.donations.map(function (_a) {
     var profile_image_url = _a.profile_image_url;
     return { "urls": profile_image_url };
 });

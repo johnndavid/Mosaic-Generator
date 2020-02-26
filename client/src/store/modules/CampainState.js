@@ -4,6 +4,7 @@ const state = {
   donationGoal: 500,
   donators: [],
   inputFile: null,
+  channelID: '',
 };
 
 const getters = {
@@ -12,6 +13,7 @@ const getters = {
   getDonationGoal: (state) => state.donationGoal,
   getDonators: (state) => state.donators,
   getInputFile: (state) => state.inputFile,
+  getChannelID: (channelID) => state.channelID,
 };
 
 const actions = {
@@ -20,6 +22,7 @@ const actions = {
   setDonationGoal({ commit }, donationGoal) { commit('changeDonationGoal', donationGoal); },
   setDonators({ commit }, donators) { commit('changeDonators', donators); },
   setInputFile({ commit }, inputFile) { commit('changeInputFile', inputFile); },
+  setChannelID({ commit }, channelID) { commit('changeChannelID', channelID); },
 };
 
 const mutations = {
@@ -28,6 +31,7 @@ const mutations = {
   changeDonationGoal: (state, donationGoal) => (state.donationGoal = donationGoal),
   changeDonators: (state, donators) => (state.donators = donators),
   changeInputFile: (state, inputFile) => (state.inputFile = inputFile),
+  changeChannelID: (state, channelID) => (state.channelID = channelID),
 };
 
 export default {

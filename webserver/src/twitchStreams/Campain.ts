@@ -46,11 +46,15 @@ export default class Campain {
 
   async generateMosaic(channelID: string) {
     this.setDonators(URLS);
-    await new MNG(new JimpImage(await JimpImage.read(`${process.cwd()}/imgs/${channelID}/baseFile.jpg`)), this.getDonationsURLS()).generate(`${process.cwd()}/imgs/${channelID}/MosaicImage.jpg`);
+    await new MNG(new JimpImage(await JimpImage.read(`${process.cwd()}/imgs/${channelID}/baseFile.jpg`)), this.getDonationsURLS()).generate(`${process.cwd()}/imgs/${channelID}/MosaicImage`);
     this.isGenerated = true;
   }
 }
 
-const URLS = DATA.donations.slice(0, 10).map(({ profile_image_url }) => {
+// const URLS = DATA.donations.slice(0, 10).map(({ profile_image_url }) => {
+//   return { "urls": profile_image_url }
+// });
+
+const URLS = DATA.donations.map(({ profile_image_url }) => {
   return { "urls": profile_image_url }
 });

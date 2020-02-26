@@ -1,5 +1,6 @@
 <template>
 <div class="user-view">
+  <b-img class="icon row col-4" center rounded="circle" :src="require('../../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
   <h4>Progress: ${{getDonationTotal}} / ${{ getDonationGoal }}</h4>
   <div class="col-12">
     <b-progress :max="getDonationGoal" height="3rem">
@@ -8,7 +9,6 @@
     </b-progress>
   </div>
   <h5>Top Donator</h5>
-  <b-img class="icon row col-4" center rounded="circle" :src="require('../../assets/gc-icon.png')" alt="GameChanger Charity Icon"></b-img>
   <div class="">
     <!-- donations will go here -->
   </div>
