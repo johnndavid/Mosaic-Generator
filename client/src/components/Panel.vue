@@ -1,11 +1,14 @@
 <template>
 <div class="user-view">
-  <MainView />
-  <StartView />
-  <RevealView />
-  <!-- <MainView v-if="this.isMainState" />
-  <StartView v-else="this.isDonationState" />
-  <RevealView v-else="this.isRevealState" /> -->
+  <component :is="currentComponent"></component>
+  <div class="buttons">
+    <b-button class="left" v-on:click="onClickLeft">
+      {{"<"}}
+    </b-button>
+    <b-button class="right" v-on:click="onClickRight">
+      {{">"}}
+    </b-button>
+  </div>
 </div>
 </template>
 
@@ -30,8 +33,8 @@ export default {
   },
   data() {
     return {
-      view: "MainView",
-      channelID: ""
+      currentComponent: "MainView",
+      tabs: [1, 2, 3]
     }
   },
   sockets: {
@@ -51,8 +54,23 @@ export default {
   },
   methods: {
     ...mapActions(['setMosaicState', 'setDonationGoal', 'setDonationTotal', 'setDonators', 'setChannelID']),
-    printInfo() {
-      twitch.rig.log(`Audience: ${userID} is watching Streamer ${channelID}`);
+    onClickLeft() {
+      if (this.currentComponent === 'MainView') {
+        this.currentComponent = 'MainView';
+      } else if (this.currentComponent === 'StartView') {
+        this.currentComponent = 'MainView';
+      } else if (this.currentComponent === 'RevealView') {
+        this.currentComponent = 'StartView';
+      }
+    },
+    onClickRight() {
+      if (this.currentComponent === 'MainView') {
+        this.currentComponent = 'StartView';
+      } else if (this.currentComponent === 'StartView') {
+        this.currentComponent = 'RevealView';
+      } else if (this.currentComponent === 'RevealView') {
+        this.currentComponent = 'RevealView';
+      }
     }
   },
   computed: {
@@ -87,27 +105,19 @@ export default {
   justify-items: center;
 }
 
-.main-view {
+.buttons {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
   display: grid;
-  grid-template: "icon"auto "link"2em/ auto;
-  align-items: center;
-  justify-items: center;
+  grid-template-columns: 1fr 1fr;
 }
 
-.icon {
-  grid-area: icon;
-  padding: 5vh 0;
+.buttons .left {
+  justify-self: start;
 }
 
-a {
-  grid-area: link;
-  background-color: #efefef;
-  color: #454343;
-  font-size: 1.1em;
-  border-radius: 1em;
-}
-
-a:hover {
-  font-size: 1.2em;
+.buttons .right {
+  justify-self: end;
 }
 </style>
