@@ -30,6 +30,10 @@ serverio.on('connection', function (socket) {
         });
         serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID]);
     });
+    socket.on('hasIMG', function (_a) {
+        var channelID = _a.channelID;
+        serverio.to("" + socket.id).emit('IMGState', streams.streamList[channelID].hasIMG(channelID));
+    });
     //Streamer controls
     socket.on('streamer_join', function (_a) {
         var channelID = _a.channelID;
@@ -57,7 +61,7 @@ serverio.on('connection', function (socket) {
         var channelID = _a.channelID, file = _a.file;
         // Start creating a mosaic image
         streams.streamList[channelID].generateMosaic(channelID);
-        // serverio.to(`${socket.id}`).emit('Reveal_Enabled');
+        serverio.to("" + socket.id).emit('Reveal_Enabled');
         emitChangeState(serverio, channelID);
     });
     socket.on('Reveal_State', function (_a) {

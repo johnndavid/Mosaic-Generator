@@ -42,13 +42,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MNG_1 = __importDefault(require("../mosGen-V2/MNG"));
 var jimp_image_1 = __importDefault(require("../mosGen-V2/jimp-image"));
 var report_json_1 = require("../mosGen-V2/report.json");
+var fs_1 = __importDefault(require("fs"));
 var Campain = /** @class */ (function () {
     function Campain() {
         this.mosaicState = 'Start';
         this.donators = [];
         this.donationTotal = 0;
         this.donationGoal = 500;
-        this.isGenerated = false;
     }
     Campain.prototype.stateChange = function () {
         if (this.mosaicState === 'Start') {
@@ -106,11 +106,13 @@ var Campain = /** @class */ (function () {
                     case 1: return [4 /*yield*/, new (_a.apply(MNG_1.default, [void 0, new (_b.apply(jimp_image_1.default, [void 0, _c.sent()]))(), this.getDonationsURLS()]))().generate(process.cwd() + "/imgs/" + channelID + "/MosaicImage")];
                     case 2:
                         _c.sent();
-                        this.isGenerated = true;
                         return [2 /*return*/];
                 }
             });
         });
+    };
+    Campain.prototype.hasIMG = function (channelID) {
+        return fs_1.default.existsSync(process.cwd() + "/imgs/" + channelID + "/MosaicImage.jpg");
     };
     return Campain;
 }());

@@ -1,20 +1,19 @@
 import MNG from "../mosGen-V2/MNG";
 import JimpImage from '../mosGen-V2/jimp-image';
 import { DATA } from '../mosGen-V2/report.json';
+import fs from "fs";
 
 export default class Campain {
   donators: any[];
   donationTotal: number;
   donationGoal: number;
   mosaicState: string;
-  isGenerated: boolean;
 
   constructor() {
     this.mosaicState = 'Start';
     this.donators = [];
     this.donationTotal = 0;
     this.donationGoal = 500;
-    this.isGenerated = false;
   }
 
   stateChange() {
@@ -47,7 +46,10 @@ export default class Campain {
   async generateMosaic(channelID: string) {
     this.setDonators(URLS);
     await new MNG(new JimpImage(await JimpImage.read(`${process.cwd()}/imgs/${channelID}/baseFile.jpg`)), this.getDonationsURLS()).generate(`${process.cwd()}/imgs/${channelID}/MosaicImage`);
-    this.isGenerated = true;
+  }
+
+  hasIMG(channelID: string) {
+    return fs.existsSync(`${process.cwd()}/imgs/${channelID}/MosaicImage.jpg`);
   }
 }
 

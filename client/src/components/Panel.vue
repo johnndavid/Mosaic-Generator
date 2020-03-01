@@ -50,7 +50,7 @@ export default {
       this.setDonationTotal(donationTotal);
       this.setDonationGoal(donationGoal);
       this.setDonators(donators);
-    }
+    },
   },
   methods: {
     ...mapActions(['setMosaicState', 'setDonationGoal', 'setDonationTotal', 'setDonators', 'setChannelID']),
