@@ -67,6 +67,8 @@ var Campain = /** @class */ (function () {
     };
     Campain.prototype.setDonators = function (donators) { this.donators = donators; };
     ;
+    Campain.prototype.getDonationTotal = function () { return this.donationTotal; };
+    ;
     Campain.prototype.setDonationTotal = function (total) { this.donationTotal = total; };
     ;
     Campain.prototype.setDonationGoal = function (goal) { this.donationGoal = goal; };

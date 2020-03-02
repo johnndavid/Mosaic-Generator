@@ -31,6 +31,8 @@ export default class Campain {
 
   setDonators(donators: any[]) { this.donators = donators };
 
+  getDonationTotal() { return this.donationTotal; };
+
   setDonationTotal(total: number) { this.donationTotal = total; };
 
   setDonationGoal(goal: number) { this.donationGoal = goal; };

@@ -28,11 +28,20 @@ serverio.on('connection', function (socket) {
         socket.join("" + channelID, function () {
             console.log("JOIN_ROOM " + channelID + ": User joined");
         });
-        serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID]);
+        serverio.to("" + socket.id).emit('Campain_State', streams.streamList[channelID]);
+    });
+    socket.on('getDonations', function (_a) {
+        var channelID = _a.channelID;
+        serverio.to("" + socket.id).emit('donationTotal', streams.streamList[channelID].getDonationTotal);
     });
     socket.on('hasIMG', function (_a) {
         var channelID = _a.channelID;
-        serverio.to("" + socket.id).emit('IMGState', streams.streamList[channelID].hasIMG(channelID));
+        try {
+            serverio.to("" + socket.id).emit('IMGState', streams.streamList[channelID].hasIMG(channelID));
+        }
+        catch (_b) {
+            console.log('Error');
+        }
     });
     //Streamer controls
     socket.on('streamer_join', function (_a) {
@@ -51,29 +60,23 @@ serverio.on('connection', function (socket) {
     });
     socket.on('Start_State', function (_a) {
         var channelID = _a.channelID, baseFile = _a.baseFile;
-        // do something when in start  state
-        // streams.streamList[channelID].setFile(file);
         streams.streamList[channelID].saveBaseFile(process.cwd() + "/imgs/" + channelID + "/baseFile", baseFile);
-        // serverio.in(`${channelID}`).emit('Campain_State', streams.streamList[channelID])
         emitChangeState(serverio, channelID);
     });
     socket.on('Stop_State', function (_a) {
         var channelID = _a.channelID, file = _a.file;
-        // Start creating a mosaic image
         streams.streamList[channelID].generateMosaic(channelID);
         serverio.to("" + socket.id).emit('Reveal_Enabled');
         emitChangeState(serverio, channelID);
     });
     socket.on('Reveal_State', function (_a) {
         var channelID = _a.channelID;
-        // send an link  to an image on the server
         if (streams.streamList[channelID].isGenerated) {
             emitChangeState(serverio, channelID);
         }
     });
     socket.on('Reset_State', function (_a) {
         var channelID = _a.channelID;
-        // Create a new campainstate object
         streams.add(channelID);
         emitChangeState(serverio, channelID);
     });
