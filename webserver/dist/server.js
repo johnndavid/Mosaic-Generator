@@ -60,7 +60,9 @@ serverio.on('connection', function (socket) {
     socket.on('Stop_State', function (_a) {
         var channelID = _a.channelID, file = _a.file;
         // Start creating a mosaic image
-        streams.streamList[channelID].generateMosaic(channelID);
+        streams.streamList[channelID].generateMosaic(channelID).then(function () {
+            socket.to("" + channelID).emit('IMGState', streams.streamList[channelID].hasIMG(channelID));
+        });
         serverio.to("" + socket.id).emit('Reveal_Enabled');
         emitChangeState(serverio, channelID);
     });
