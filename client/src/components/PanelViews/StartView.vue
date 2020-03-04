@@ -8,7 +8,7 @@
       </b-progress-bar>
     </b-progress>
   </div>
-  <h5>Top Donator</h5>
+  <!-- <h5>Top Donator</h5> -->
   <div class="">
     <!-- donations will go here -->
   </div>
@@ -26,9 +26,21 @@ export default {
   data() {
     return {}
   },
+  sockets: {
+    donatoinTotal: function(donationTotal) {
+      console.log('-------------------------------------')
+      console.log(donatoinTotal)
+      console.log('-------------------------------------')
+    }
+  },
   methods: {},
   computed: {
     ...mapGetters(['getDonationTotal', 'getDonationGoal'])
+  },
+  created() {
+    this.$socket.emit('getDonations', {
+      'channelID': channelID
+    })
   }
 }
 </script>

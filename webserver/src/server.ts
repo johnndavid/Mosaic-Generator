@@ -29,11 +29,20 @@ serverio.on('connection', (socket) => {
     socket.join(`${channelID}`, () => {
       console.log(`JOIN_ROOM ${channelID}: User joined`);
     });
-    serverio.to('${socket.id}').emit('Campain_State', streams.streamList[channelID])
+    serverio.to(`${socket.id}`).emit('Campain_State', streams.streamList[channelID])
+  })
+
+  socket.on('getDonations', ({ channelID }) => {
+    serverio.to(`${socket.id}`).emit('donationTotal', streams.streamList[channelID].getDonationTotal)
   })
 
   socket.on('hasIMG', ({ channelID }) => {
-    serverio.to(`${socket.id}`).emit('IMGState', streams.streamList[channelID].hasIMG(channelID))
+    try {
+      serverio.to(`${socket.id}`).emit('IMGState', streams.streamList[channelID].hasIMG(channelID))
+    }
+    catch {
+      console.log('Error');
+    }
   })
 
   //Streamer controls
@@ -52,10 +61,7 @@ serverio.on('connection', (socket) => {
   })
 
   socket.on('Start_State', ({ channelID, baseFile }) => {
-    // do something when in start  state
-    // streams.streamList[channelID].setFile(file);
     streams.streamList[channelID].saveBaseFile(`${process.cwd()}/imgs/${channelID}/baseFile`, baseFile)
-    // serverio.in(`${channelID}`).emit('Campain_State', streams.streamList[channelID])
     emitChangeState(serverio, channelID);
 
   })
@@ -71,14 +77,12 @@ serverio.on('connection', (socket) => {
   })
 
   socket.on('Reveal_State', ({ channelID }) => {
-    // send an link  to an image on the server
     if (streams.streamList[channelID].isGenerated) {
       emitChangeState(serverio, channelID);
     }
   })
 
   socket.on('Reset_State', ({ channelID }) => {
-    // Create a new campainstate object
     streams.add(channelID);
     emitChangeState(serverio, channelID);
   })
